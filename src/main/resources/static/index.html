@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Belgian Structured Communication – Demo</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 2rem; line-height: 1.5; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .row { display: flex; gap: .5rem; flex-wrap: wrap; align-items: center; }
+    input[type=text] { padding: .6rem .8rem; border: 1px solid #ccc; border-radius: 8px; min-width: 260px; }
+    button { padding: .6rem .9rem; border: 0; border-radius: 8px; background: #2f6fed; color: #fff; cursor: pointer; }
+    button.secondary { background: #666; }
+    pre { background: #0b1020; color: #e5e7eb; padding: 1rem; border-radius: 8px; overflow: auto; }
+    small.hint { color: #555; }
+    .pill { display:inline-block; padding:.15rem .5rem; border-radius:999px; font-size:.8rem; background:#eef; color:#234; margin-left:.25rem;}
+  </style>
+</head>
+<body>
+<h1>Belgian Structured Communication <span class="pill">Demo UI</span></h1>
+<p class="card">Use this page to <strong>generate</strong> a valid reference and to <strong>validate</strong> a structured value
+(<code>+++XXX/XXXX/XXXXX+++</code>) or a numeric-only value (<code>12 digits</code>). It calls the backend endpoints directly.</p>
+
+<div class="card">
+  <h2>Generate</h2>
+  <div class="row">
+    <button id="btn-gen">Generate</button>
+    <small class="hint">GET <code>/api/comm/generate</code></small>
+  </div>
+  <pre id="out-gen">Click "Generate"…</pre>
+</div>
+
+<div class="card">
+  <h2>Validate – Structured</h2>
+  <div class="row">
+    <input type="text" id="in-structured" placeholder="+++123/4567/89095+++" />
+    <button id="btn-val-structured-get">Validate (GET)</button>
+    <button id="btn-val-structured-post" class="secondary">Validate (POST)</button>
+    <small class="hint">GET <code>/api/comm/validate/structured?value=...</code> | POST JSON <code>{"value": "..."}</code></small>
+  </div>
+  <pre id="out-structured">Enter a structured value…</pre>
+</div>
+
+<div class="card">
+  <h2>Validate – Numeric-only (12 digits)</h2>
+  <div class="row">
+    <input type="text" id="in-numeric" placeholder="123456789095" />
+    <button id="btn-val-numeric-get">Validate (GET)</button>
+    <button id="btn-val-numeric-post" class="secondary">Validate (POST)</button>
+    <small class="hint">GET <code>/api/comm/validate/numeric?value=...</code> | POST JSON <code>{"value": "..."}</code></small>
+  </div>
+  <pre id="out-numeric">Enter a 12-digit number…</pre>
+</div>
+
+<script>
+async function call(endpoint, options={}) {
+  const res = await fetch(endpoint, options);
+  const text = await res.text();
+  try { return JSON.parse(text); } catch { return text; }
+}
+function show(el, data) {
+  el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+}
+document.getElementById('btn-gen').addEventListener('click', async () => {
+  show(document.getElementById('out-gen'), 'Loading…');
+  const data = await call('/api/comm/generate');
+  show(document.getElementById('out-gen'), data);
+});
+document.getElementById('btn-val-structured-get').addEventListener('click', async () => {
+  const v = encodeURIComponent(document.getElementById('in-structured').value);
+  show(document.getElementById('out-structured'), 'Loading…');
+  const data = await call('/api/comm/validate/structured?value=' + v);
+  show(document.getElementById('out-structured'), data);
+});
+document.getElementById('btn-val-structured-post').addEventListener('click', async () => {
+  const v = document.getElementById('in-structured').value;
+  show(document.getElementById('out-structured'), 'Loading…');
+  const data = await call('/api/comm/validate/structured', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ value: v })
+  });
+  show(document.getElementById('out-structured'), data);
+});
+document.getElementById('btn-val-numeric-get').addEventListener('click', async () => {
+  const v = encodeURIComponent(document.getElementById('in-numeric').value);
+  show(document.getElementById('out-numeric'), 'Loading…');
+  const data = await call('/api/comm/validate/numeric?value=' + v);
+  show(document.getElementById('out-numeric'), data);
+});
+document.getElementById('btn-val-numeric-post').addEventListener('click', async () => {
+  const v = document.getElementById('in-numeric').value;
+  show(document.getElementById('out-numeric'), 'Loading…');
+  const data = await call('/api/comm/validate/numeric', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ value: v })
+  });
+  show(document.getElementById('out-numeric'), data);
+});
+</script>
+</body>
+</html>
