@@ -44,14 +44,14 @@ public class StructuredCommController {
 
     @GetMapping("/validate/structured")
     @Operation(summary = "Validate a fully structured value (GET query param)", description = "Format: +++XXX/XXXX/XXXXX+++; use ?value=...")
-    public ValidationResponse validateStructuredGet(@RequestParam @NotBlank String value) {
+    public ValidationResponse validateStructuredGet(@RequestParam("value") @NotBlank String value) {
         var r = service.validateStructured(value);
         return new ValidationResponse(r.structured(), r.numeric(), r.valid(), r.reason(), r.timestamp());
     }
 
-    @GetMapping("/validate/numeric")
-    @Operation(summary = "Validate a numeric-only 12-digit value (GET query param)", description = "Use ?value=...")
-    public ValidationResponse validateNumericGet(@RequestParam @NotBlank String value) {
+    @GetMapping("/validate/numeric/{value}")
+    @Operation(summary = "Validate a numeric-only 12-digit value (GET path variable)", description = "Use /validate/numeric/{value}")
+    public ValidationResponse validateNumericGet(@PathVariable("value") @NotBlank String value) {
         var r = service.validateNumeric(value);
         return new ValidationResponse(r.structured(), r.numeric(), r.valid(), r.reason(), r.timestamp());
     }

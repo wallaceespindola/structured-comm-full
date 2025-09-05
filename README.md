@@ -1,8 +1,25 @@
+![Java](https://cdn.icon-icons.com/icons2/2699/PNG/512/java_logo_icon_168609.png)
+
 # Structured Communication (Belgium) – Java 21 + Spring Boot
 
-A tiny REST API to **generate** and **validate** Belgian structured communications (e.g., `+++123/4567/89095+++`). Now with a super simple **frontend page** under `/` to test the endpoints.
+![Apache 2.0 License](https://img.shields.io/badge/License-Apache2.0-orange)
+![Java](https://img.shields.io/badge/Built_with-Java21-blue)
+![Junit5](https://img.shields.io/badge/Tested_with-Junit5-teal)
+![AssertJ](https://img.shields.io/badge/Asserts_by-AssertJ-purple)
+![Spring](https://img.shields.io/badge/Structured_by-SpringBoot-green)
+![Maven](https://img.shields.io/badge/Powered_by-Maven-pink)
+![Swagger](https://img.shields.io/badge/Docs_by-Swagger-yellow)
+![OpenAPI](https://img.shields.io/badge/Specs_by-OpenAPI-lemon)
+
+## Introduction
+
+Structure Communication in Belgium, with Java 21 + JUnit 5 + AssertJ + Maven.
+
+A tiny REST API to **generate** and **validate** Belgian structured communications (e.g., `+++123/4567/89095+++`) using
+modulo 97 as check-rule.
 
 ## Features
+
 - Generate random valid references
 - Validate **structured** (`+++XXX/XXXX/XXXXX+++`) and **numeric-only** (12 digits)
 - **OpenAPI/Swagger** at `/swagger-ui`
@@ -13,6 +30,7 @@ A tiny REST API to **generate** and **validate** Belgian structured communicatio
 - **Static Frontend** at `/` (index.html)
 
 ## Project Structure
+
 ```
 structured-comm/
 ├─ pom.xml
@@ -46,10 +64,12 @@ mvn clean package && java -jar target/structured-comm-0.0.1.jar
 ```
 
 Open:
+
 - Frontend demo: `http://localhost:8080/`
 - Swagger UI: `http://localhost:8080/swagger-ui`
 - OpenAPI JSON: `http://localhost:8080/v3/api-docs`
 - Health: `http://localhost:8080/actuator/health`
+- Actuator Info: `http://localhost:8080/actuator/info`
 
 ## Endpoints
 
@@ -67,11 +87,13 @@ docker run --rm -p 8080:8080 structured-comm:latest
 ```
 
 ### Docker Compose
+
 ```bash
 docker compose up --build
 ```
 
 ## Makefile
+
 ```bash
 make run
 make test
@@ -83,7 +105,29 @@ make compose-down
 ```
 
 ## CI – GitHub Actions
+
 See `.github/workflows/ci.yml`. Push to GitHub to trigger build, tests, and image push to GHCR.
 
 ## Check digits rule
+
 `check = 97 - (base % 97)`; if result is `0`, use `97`.
+
+## Author
+
+- Wallace Espindola, Sr. Software Engineer / Solution Architect / Java & Python Dev
+- **LinkedIn:** [linkedin.com/in/wallaceespindola/](https://www.linkedin.com/in/wallaceespindola/)
+- **GitHub:** [github.com/wallaceespindola](https://github.com/wallaceespindola)
+- **E-mail:** [wallace.espindola@gmail.com](mailto:wallace.espindola@gmail.com)
+- **Twitter:** [@wsespindola](https://twitter.com/wsespindola)
+- **Gravatar:** [gravatar.com/wallacese](https://gravatar.com/wallacese)
+- **Dev Community:** [dev.to/wallaceespindola](https://dev.to/wallaceespindola)
+- **DZone Articles:** [DZone Profile](https://dzone.com/users/1254611/wallacese.html)
+- **Pulse Articles:** [LinkedIn Articles](https://www.linkedin.com/in/wallaceespindola/recent-activity/articles/)
+- **Website:** [W-Tech IT Solutions](https://www.wtechitsolutions.com/)
+- **Presentation Slides:** [Speakerdeck](https://speakerdeck.com/wallacese)
+
+## License
+
+- This project is released under the Apache 2.0 License.
+- See the [LICENSE](LICENSE) file for details.
+- Copyright © 2025 [Wallace Espindola](https://github.com/wallaceespindola/).

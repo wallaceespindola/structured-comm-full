@@ -2,9 +2,18 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: "@project.artifactId@"
+    version: "@project.version@"
   jackson:
     serialization:
       write-dates-as-timestamps: false
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/resources/static
+    livereload:
+      enabled: true
 
 springdoc:
   api-docs:
@@ -21,3 +30,74 @@ management:
     health:
       probes:
         enabled: true
+  info:
+    env:
+      enabled: true
+    git:
+      mode: full
+    build:
+      enabled: true
+
+info:
+  app:
+    name: "@project.name@"
+    description: "@project.description@"
+    version: "@project.version@"
+    artifact-id: "@project.artifactId@"
+    group-id: "@project.groupId@"
+    encoding: "@project.build.sourceEncoding@"
+    java:
+      version: "@java.version@"
+      vendor: "${java.vendor}"
+    spring:
+      boot:
+        version: "@spring.boot.version@"
+      profiles:
+        active: "${spring.profiles.active:default}"
+  runtime:
+    timezone: "${user.timezone}"
+    os:
+      name: "${os.name}"
+      arch: "${os.arch}"
+      version: "${os.version}"
+  contact:
+    email: "wallace.espindola@gmail.com"
+    website: "https://github.com/wallaceespindola/structured-comm-full"
+    maintainer: "Wallace Espindola"
+  features:
+    validation:
+      - "Belgian structured communication format validation"
+      - "Numeric 12-digit format validation"
+      - "Checksum calculation and verification"
+    generation:
+      - "Random valid structured communication generation"
+      - "Automatic checksum computation"
+    api:
+      - "RESTful API endpoints"
+      - "OpenAPI 3.0 specification"
+      - "Swagger UI documentation"
+      - "JSON response format"
+    monitoring:
+      - "Spring Boot Actuator integration"
+      - "Health checks"
+      - "Application metrics"
+      - "Build information"
+    development:
+      - "Hot reload with DevTools"
+      - "LiveReload support"
+  endpoints:
+    base: "/api/comm"
+    generate: "/api/comm/generate"
+    validate:
+      structured:
+        get: "/api/comm/validate/structured"
+        post: "/api/comm/validate/structured"
+      numeric:
+        get: "/api/comm/validate/numeric/{value}"
+        post: "/api/comm/validate/numeric"
+    documentation:
+      swagger: "/swagger-ui"
+      api-docs: "/v3/api-docs"
+    actuator:
+      health: "/actuator/health"
+      info: "/actuator/info"

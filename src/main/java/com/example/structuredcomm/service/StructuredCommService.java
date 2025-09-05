@@ -11,8 +11,8 @@ public class StructuredCommService {
 
     private static final SecureRandom RNG = new SecureRandom();
     private static final Pattern STRUCTURED_PATTERN =
-            Pattern.compile("^\+\+\+\d{3}/\d{4}/\d{5}\+\+\+$");
-    private static final Pattern NUMERIC12 = Pattern.compile("^\d{12}$");
+            Pattern.compile("^\\+\\+\\+\\d{3}/\\d{4}/\\d{5}\\+\\+\\+$");
+    private static final Pattern NUMERIC12 = Pattern.compile("^\\d{12}$");
 
     public record Result(String structured, String numeric, boolean valid, String reason, Instant timestamp) {}
 
@@ -67,6 +67,6 @@ public class StructuredCommService {
     }
 
     private String digitsOnly(String s) {
-        return s.replaceAll("\D", "");
+        return s.replaceAll("\\D", "");
     }
 }

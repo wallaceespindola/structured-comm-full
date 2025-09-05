@@ -20,15 +20,15 @@ class StructuredCommServiceTest {
     void checkDigits_zeroModulo97_resultsIn97() {
         var r1 = service.validateNumeric("000000009797"); // base 97 -> check 97
         assertThat(r1.valid()).isTrue();
-        assertThat(r1.structured()).isEqualTo("+++000/0000/9797+++");
+        assertThat(r1.structured()).isEqualTo("+++000/0000/09797+++");
 
         var r2 = service.validateNumeric("000000019497"); // base 194 -> check 97
         assertThat(r2.valid()).isTrue();
-        assertThat(r2.structured()).isEqualTo("+++000/0001/9497+++");
+        assertThat(r2.structured()).isEqualTo("+++000/0000/19497+++");
 
         var r3 = service.validateNumeric("000000000097"); // base 0 -> check 97
         assertThat(r3.valid()).isTrue();
-        assertThat(r3.structured()).isEqualTo("+++000/0000/0097+++");
+        assertThat(r3.structured()).isEqualTo("+++000/0000/00097+++");
     }
 
     @Test
@@ -40,11 +40,11 @@ class StructuredCommServiceTest {
 
         var r2 = service.validateNumeric("111111111127"); // base %97=70 -> check 27
         assertThat(r2.valid()).isTrue();
-        assertThat(r2.structured()).isEqualTo("+++111/1111/1127+++");
+        assertThat(r2.structured()).isEqualTo("+++111/1111/11127+++");
 
         var r3 = service.validateNumeric("999999999949"); // base %97=48 -> check 49
         assertThat(r3.valid()).isTrue();
-        assertThat(r3.structured()).isEqualTo("+++999/9999/9949+++");
+        assertThat(r3.structured()).isEqualTo("+++999/9999/99949+++");
     }
 
     @Test
