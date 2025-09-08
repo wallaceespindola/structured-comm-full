@@ -69,4 +69,56 @@ class StructuredCommServiceTest {
         assertThat(good.valid()).isTrue();
         assertThat(good.numeric()).isEqualTo("123456789095");
     }
+
+    // --- New tests: identify in line (structured & numeric) ---
+
+    @Test
+    @DisplayName("Identify structured in line – finds and validates +++XXX/XXXX/XXXXX+++")
+    void identifyStructuredInLine_findsAndValidates() {
+        var r = service.identifyStructuredInLine("Please pay +++123/4567/89095+++ today.");
+        assertThat(r.valid()).isTrue();
+        assertThat(r.structured()).isEqualTo("+++123/4567/89095+++");
+        assertThat(r.numeric()).isEqualTo("123456789095");
+    }
+
+    @Test
+    @DisplayName("Identify structured in line – no match returns invalid with reason")
+    void identifyStructuredInLine_noMatch() {
+        var r = service.identifyStructuredInLine("No reference is present here.");
+        assertThat(r.valid()).isFalse();
+        assertThat(r.reason()).contains("No structured VCS");
+    }
+
+    @Test
+    @DisplayName("Identify structured in line – blank input invalid")
+    void identifyStructuredInLine_blank() {
+        var r = service.identifyStructuredInLine("   ");
+        assertThat(r.valid()).isFalse();
+        assertThat(r.reason()).contains("must not be blank");
+    }
+
+    @Test
+    @DisplayName("Identify numeric in line – finds and validates a 12-digit VCS")
+    void identifyNumericInLine_findsAndValidates() {
+        var r = service.identifyNumericInLine("Ref 123456789095 attached");
+        assertThat(r.valid()).isTrue();
+        assertThat(r.numeric()).isEqualTo("123456789095");
+        assertThat(r.structured()).isEqualTo("+++123/4567/89095+++");
+    }
+
+    @Test
+    @DisplayName("Identify numeric in line – does not match when adjacent digits make 13+")
+    void identifyNumericInLine_boundaryCheck() {
+        var r = service.identifyNumericInLine("Code 1234567890950 (13 digits)\n");
+        assertThat(r.valid()).isFalse();
+        assertThat(r.reason()).contains("No numeric 12-digit VCS");
+    }
+
+    @Test
+    @DisplayName("Identify numeric in line – blank input invalid")
+    void identifyNumericInLine_blank() {
+        var r = service.identifyNumericInLine("");
+        assertThat(r.valid()).isFalse();
+        assertThat(r.reason()).contains("must not be blank");
+    }
 }

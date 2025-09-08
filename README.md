@@ -29,6 +29,9 @@ modulo 97 as check-rule.
 - **Makefile** for common tasks
 - **GitHub Actions** CI (build, test, push image to GHCR)
 - **Static Frontend** at `/` (index.html)
+- Identify a VCS within a free-form line (structured and numeric)
+- DevTools hot reload for a smooth dev experience
+- Health endpoint includes timestamp details
 
 ## Project Structure
 
@@ -72,13 +75,32 @@ Open:
 - Health: `http://localhost:8080/actuator/health`
 - Actuator Info: `http://localhost:8080/actuator/info`
 
+Postman:
+
+- Import the collection at `postman/structured-comm.postman_collection.json`
+- Has examples and basic tests for all endpoints
+
 ## Endpoints
 
 - `GET /api/comm/generate`
 - `POST /api/comm/validate/structured` (body: `{ "value": "+++123/4567/89095+++" }`)
 - `GET /api/comm/validate/structured?value=+++123/4567/89095+++`
 - `POST /api/comm/validate/numeric` (body: `{ "value": "123456789095" }`)
-- `GET /api/comm/validate/numeric?value=123456789095`
+- `GET /api/comm/validate/numeric/{value}`
+
+### Identify in Line
+
+- `POST /api/comm/identify/structured` (body: `{ "value": "Please pay +++123/4567/89095+++ today" }`)
+- `GET /api/comm/identify/structured?value=Please%20pay%20%2B%2B%2B123%2F4567%2F89095%2B%2B%2B%20today`
+- `POST /api/comm/identify/numeric` (body: `{ "value": "Ref 123456789095 attached" }`)
+- `GET /api/comm/identify/numeric?value=Ref%20123456789095%20attached`
+
+### Notes on GET vs POST encoding
+
+- For GET query parameters, URL encoding rules treat `+` as space. The frontend and Swagger encode values automatically (e.g., `+` → `%2B`, `/` → `%2F`).
+- The backend includes normalization to tolerate common client mistakes (trims quotes, retries with spaces as `+`, and reads the raw query string to preserve `+`).
+- Nevertheless, the most reliable approach is to use POST with JSON bodies for values that contain special characters.
+- The structured format is strict: `+++XXX/XXXX/XXXXX+++`. Inputs like `+++123//4567//89095+++` are intentionally invalid.
 
 ## Docker
 

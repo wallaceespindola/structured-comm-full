@@ -13,6 +13,9 @@ public class StructuredCommService {
     private static final Pattern STRUCTURED_PATTERN =
             Pattern.compile("^\\+\\+\\+\\d{3}/\\d{4}/\\d{5}\\+\\+\\+$");
     private static final Pattern NUMERIC12 = Pattern.compile("^\\d{12}$");
+    private static final Pattern STRUCTURED_PATTERN_INLINE =
+            Pattern.compile("\\+\\+\\+\\d{3}/\\d{4}/\\d{5}\\+\\+\\+");
+    private static final Pattern NUMERIC12_INLINE = Pattern.compile("(?<!\\d)\\d{12}(?!\\d)");
 
     public record Result(String structured, String numeric, boolean valid, String reason, Instant timestamp) {}
 
@@ -35,6 +38,38 @@ public class StructuredCommService {
 
     public Result validateNumeric(String numeric) {
         return validateNumericInternal(numeric, Instant.now());
+    }
+
+    /**
+     * Find a structured communication within a free-form line and validate it.
+     */
+    public Result identifyStructuredInLine(String line) {
+        Instant now = Instant.now();
+        if (line == null || line.isBlank()) {
+            return new Result(null, null, false, "Input line must not be blank", now);
+        }
+        var m = STRUCTURED_PATTERN_INLINE.matcher(line);
+        if (!m.find()) {
+            return new Result(null, null, false, "No structured VCS found in input line", now);
+        }
+        String candidate = m.group();
+        return validateStructured(candidate);
+    }
+
+    /**
+     * Find a 12-digit numeric VCS within a free-form line and validate it.
+     */
+    public Result identifyNumericInLine(String line) {
+        Instant now = Instant.now();
+        if (line == null || line.isBlank()) {
+            return new Result(null, null, false, "Input line must not be blank", now);
+        }
+        var m = NUMERIC12_INLINE.matcher(line);
+        if (!m.find()) {
+            return new Result(null, null, false, "No numeric 12-digit VCS found in input line", now);
+        }
+        String candidate = m.group();
+        return validateNumeric(candidate);
     }
 
     private Result validateNumericInternal(String numeric, Instant ts) {

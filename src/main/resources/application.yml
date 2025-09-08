@@ -30,6 +30,7 @@ management:
     health:
       probes:
         enabled: true
+      show-details: always
   info:
     env:
       enabled: true

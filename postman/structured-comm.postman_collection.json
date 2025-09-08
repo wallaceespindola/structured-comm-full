@@ -1,0 +1,169 @@
+{
+  "info": {
+    "_postman_id": "b5a5b9e2-6c1f-4d0c-9a51-structured-comm",
+    "name": "Structured Comm API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for Belgian Structured Communication API (generate, validate, identify)."
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" }
+  ],
+  "item": [
+    {
+      "name": "API",
+      "item": [
+        {
+          "name": "Generate (GET)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/comm/generate"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Has numeric & structured', function () { var json = pm.response.json(); pm.expect(json).to.have.property('numeric'); pm.expect(json).to.have.property('structured'); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Validate Structured (POST)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"value\": \"+++123/4567/89095+++\"\n}"
+            },
+            "url": "{{baseUrl}}/api/comm/validate/structured"
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));",
+            "const j = pm.response.json(); pm.expect(j).to.have.property('valid');"
+          ] } } ]
+        },
+        {
+          "name": "Validate Structured (GET)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/comm/validate/structured?value=%2B%2B%2B123%2F4567%2F89095%2B%2B%2B",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","comm","validate","structured"],
+              "query": [ { "key": "value", "value": "%2B%2B%2B123%2F4567%2F89095%2B%2B%2B" } ]
+            }
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));"
+          ] } } ]
+        },
+        {
+          "name": "Validate Numeric (POST)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"value\": \"123456789095\"\n}" },
+            "url": "{{baseUrl}}/api/comm/validate/numeric"
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));",
+            "pm.test('Valid is boolean', () => { const j = pm.response.json(); pm.expect(j).to.have.property('valid'); });"
+          ] } } ]
+        },
+        {
+          "name": "Validate Numeric (GET path)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/comm/validate/numeric/123456789095"
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));"
+          ] } } ]
+        },
+        {
+          "name": "Identify Structured in Line (POST)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"value\": \"Please pay +++123/4567/89095+++ today\"\n}" },
+            "url": "{{baseUrl}}/api/comm/identify/structured"
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));",
+            "pm.test('Has structured', () => { const j = pm.response.json(); pm.expect(j).to.have.property('structured'); });"
+          ] } } ]
+        },
+        {
+          "name": "Identify Structured in Line (GET)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/comm/identify/structured?value=Please%20pay%20%2B%2B%2B123%2F4567%2F89095%2B%2B%2B%20today",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","comm","identify","structured"],
+              "query": [ { "key": "value", "value": "Please%20pay%20%2B%2B%2B123%2F4567%2F89095%2B%2B%2B%20today" } ]
+            }
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));"
+          ] } } ]
+        },
+        {
+          "name": "Identify Numeric in Line (POST)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"value\": \"Ref 123456789095 attached\"\n}" },
+            "url": "{{baseUrl}}/api/comm/identify/numeric"
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));"
+          ] } } ]
+        },
+        {
+          "name": "Identify Numeric in Line (GET)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/comm/identify/numeric?value=Ref%20123456789095%20attached",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","comm","identify","numeric"],
+              "query": [ { "key": "value", "value": "Ref 123456789095 attached" } ]
+            }
+          },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [
+            "pm.test('200 OK', () => pm.response.to.have.status(200));"
+          ] } } ]
+        }
+      ]
+    },
+    {
+      "name": "Actuator & Docs",
+      "item": [
+        {
+          "name": "Health",
+          "request": { "method": "GET", "url": "{{baseUrl}}/actuator/health" },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [ "pm.test('200 OK', () => pm.response.to.have.status(200));" ] } } ]
+        },
+        {
+          "name": "Info",
+          "request": { "method": "GET", "url": "{{baseUrl}}/actuator/info" },
+          "event": [ { "listen": "test", "script": { "type": "text/javascript", "exec": [ "pm.test('200 OK', () => pm.response.to.have.status(200));" ] } } ]
+        },
+        {
+          "name": "Swagger UI",
+          "request": { "method": "GET", "url": "{{baseUrl}}/swagger-ui" }
+        },
+        {
+          "name": "OpenAPI JSON",
+          "request": { "method": "GET", "url": "{{baseUrl}}/v3/api-docs" }
+        }
+      ]
+    }
+  ]
+}
