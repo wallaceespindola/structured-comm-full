@@ -5,11 +5,10 @@
 ![Apache 2.0 License](https://img.shields.io/badge/License-Apache2.0-orange)
 ![Java](https://img.shields.io/badge/Built_with-Java21-blue)
 ![Junit5](https://img.shields.io/badge/Tested_with-Junit5-teal)
-![AssertJ](https://img.shields.io/badge/Asserts_by-AssertJ-purple)
 ![Spring](https://img.shields.io/badge/Structured_by-SpringBoot-lemon)
 ![Maven](https://img.shields.io/badge/Powered_by-Maven-pink)
 ![Swagger](https://img.shields.io/badge/Docs_by-Swagger-yellow)
-![OpenAPI](https://img.shields.io/badge/Specs_by-OpenAPI-green)
+![OpenAPI](https://img.shields.io/badge/Specs_by-OpenAPI-purple)
 [![CI](https://github.com/wallaceespindola/structured-comm-full/actions/workflows/ci.yml/badge.svg)](https://github.com/wallaceespindola/structured-comm-full/actions/workflows/ci.yml)
 
 ## Introduction
