@@ -1,0 +1,48 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+.github/
+
+# Docker
+.dockerignore
+
+# IDEs and editors
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Maven / Java build artifacts
+target/
+build/
+out/
+
+# Maven wrapper cache (not needed for container build)
+.mvn/
+
+# Logs and temp files
+*.log
+logs/
+tmp/
+.cache/
+
+# Test and coverage outputs
+coverage/
+.site/
+
+# Environment files
+.env
+.env.*
+
+# Misc
+*.swp
+*.swo
+
+# Node (in case of mixed projects)
+node_modules/
