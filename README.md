@@ -15,7 +15,7 @@
 
 Structure Communication in Belgium, with Java 21 + JUnit 5 + AssertJ + Maven.
 
-A tiny REST API to **generate** and **validate** Belgian structured communications (e.g., `+++123/4567/89095+++`) using
+A tiny REST API to **generate** and **validate** Belgian banking structured communications (e.g., `+++123/4567/89095+++`) using
 modulo 97 as check-rule.
 
 ## Features
