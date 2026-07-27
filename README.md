@@ -44,6 +44,7 @@ structured-comm/
 ├─ src/
 │  ├─ main/java/com/example/structuredcomm/
 │  │  ├─ StructuredCommApplication.java
+│  │  ├─ actuator/AppHealthIndicator.java
 │  │  ├─ controller/StructuredCommController.java
 │  │  ├─ service/StructuredCommService.java
 │  │  └─ dto/
