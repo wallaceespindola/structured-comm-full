@@ -88,8 +88,8 @@ public class StructuredCommService {
 
     private String computeCheck(String base10) {
         long n = Long.parseLong(base10);
-        long mod = n % 97L;
-        long check = 97L - mod;
+        // Belgian OGM/VCS rule: check = base mod 97, with 97 when the remainder is 0.
+        long check = n % 97L;
         if (check == 0L) check = 97L;
         return "%02d".formatted(check);
     }

@@ -34,40 +34,46 @@ class StructuredCommServiceTest {
     @Test
     @DisplayName("Valid examples")
     void validExamples_pass() {
-        var r1 = service.validateNumeric("123456789095"); // base %97=2 -> check 95
+        var r1 = service.validateNumeric("123456789002"); // base %97=2 -> check 02
         assertThat(r1.valid()).isTrue();
-        assertThat(r1.structured()).isEqualTo("+++123/4567/89095+++");
+        assertThat(r1.structured()).isEqualTo("+++123/4567/89002+++");
 
-        var r2 = service.validateNumeric("111111111127"); // base %97=70 -> check 27
+        var r2 = service.validateNumeric("111111111170"); // base %97=70 -> check 70
         assertThat(r2.valid()).isTrue();
-        assertThat(r2.structured()).isEqualTo("+++111/1111/11127+++");
+        assertThat(r2.structured()).isEqualTo("+++111/1111/11170+++");
 
-        var r3 = service.validateNumeric("999999999949"); // base %97=48 -> check 49
+        var r3 = service.validateNumeric("999999999948"); // base %97=48 -> check 48
         assertThat(r3.valid()).isTrue();
-        assertThat(r3.structured()).isEqualTo("+++999/9999/99949+++");
+        assertThat(r3.structured()).isEqualTo("+++999/9999/99948+++");
+    }
+
+    @Test
+    @DisplayName("Known-valid Belgian reference passes")
+    void knownValidReference_passes() {
+        assertThat(service.validateStructured("+++090/9337/55493+++").valid()).isTrue();
     }
 
     @Test
     @DisplayName("Invalid: wrong check digits should fail with expected reason")
     void invalidCheckDigits_fail() {
-        var r = service.validateNumeric("123456789000"); // expected 95
+        var r = service.validateNumeric("123456789000"); // expected 02
         assertThat(r.valid()).isFalse();
-        assertThat(r.reason()).contains("expected 95");
+        assertThat(r.reason()).contains("expected 02");
         assertThat(r.structured()).isEqualTo("+++123/4567/89000+++");
     }
 
     @Test
     @DisplayName("Structured format must be +++XXX/XXXX/XXXXX+++")
     void structuredFormat_enforced() {
-        var bad1 = service.validateStructured("123/4567/89095");
+        var bad1 = service.validateStructured("123/4567/89002");
         assertThat(bad1.valid()).isFalse();
 
-        var bad2 = service.validateStructured("+++12/3456/789095+++");
+        var bad2 = service.validateStructured("+++12/3456/789002+++");
         assertThat(bad2.valid()).isFalse();
 
-        var good = service.validateStructured("+++123/4567/89095+++");
+        var good = service.validateStructured("+++123/4567/89002+++");
         assertThat(good.valid()).isTrue();
-        assertThat(good.numeric()).isEqualTo("123456789095");
+        assertThat(good.numeric()).isEqualTo("123456789002");
     }
 
     // --- New tests: identify in line (structured & numeric) ---
@@ -75,10 +81,10 @@ class StructuredCommServiceTest {
     @Test
     @DisplayName("Identify structured in line – finds and validates +++XXX/XXXX/XXXXX+++")
     void identifyStructuredInLine_findsAndValidates() {
-        var r = service.identifyStructuredInLine("Please pay +++123/4567/89095+++ today.");
+        var r = service.identifyStructuredInLine("Please pay +++123/4567/89002+++ today.");
         assertThat(r.valid()).isTrue();
-        assertThat(r.structured()).isEqualTo("+++123/4567/89095+++");
-        assertThat(r.numeric()).isEqualTo("123456789095");
+        assertThat(r.structured()).isEqualTo("+++123/4567/89002+++");
+        assertThat(r.numeric()).isEqualTo("123456789002");
     }
 
     @Test
@@ -100,16 +106,16 @@ class StructuredCommServiceTest {
     @Test
     @DisplayName("Identify numeric in line – finds and validates a 12-digit VCS")
     void identifyNumericInLine_findsAndValidates() {
-        var r = service.identifyNumericInLine("Ref 123456789095 attached");
+        var r = service.identifyNumericInLine("Ref 123456789002 attached");
         assertThat(r.valid()).isTrue();
-        assertThat(r.numeric()).isEqualTo("123456789095");
-        assertThat(r.structured()).isEqualTo("+++123/4567/89095+++");
+        assertThat(r.numeric()).isEqualTo("123456789002");
+        assertThat(r.structured()).isEqualTo("+++123/4567/89002+++");
     }
 
     @Test
     @DisplayName("Identify numeric in line – does not match when adjacent digits make 13+")
     void identifyNumericInLine_boundaryCheck() {
-        var r = service.identifyNumericInLine("Code 1234567890950 (13 digits)\n");
+        var r = service.identifyNumericInLine("Code 1234567890020 (13 digits)\n");
         assertThat(r.valid()).isFalse();
         assertThat(r.reason()).contains("No numeric 12-digit VCS");
     }
